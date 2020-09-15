@@ -359,35 +359,51 @@ describe('Product update / Error case', () => {
             done()
         })
     })
-    // test('failed because required field is empty', (done) => {
-    //     const empty_name = { ...edit_product_data, name: ''}
-    //     request(app)
-    //         .put(`product/${productId}`)
-    //         .set('token', initial_token)
-    //         .send(empty_name)
-    //         .end((err, res) => {
-    //             const errors = ['name is required']
-    //             if(err) throw err
-    //             expect(res.status).toBe(400)
-    //             expect(res.body).toHaveProperty('errors', expect.any(Array))
-    //             expect(res.body.errors).toEqual(expect.arrayContaining(errors))
-    //             done()
-    //         })  
-    // })
-    // test('failed because stock is minus', (done) => {
-    //     const minus_stock_edit = {...edit_product_data, stock: -5}
-    //     request(app)
-    //     .put(`/product/${productId}`)
-    //     .set('token', initial_token)
-    //     .send(minus_stock_edit)
-    //     .end((err, res) => {
-    //         const errors = ['must be a non-negative number']
-    //         if(err) throw err
-    //         expect(res.status).toBe(400)
-    //         expect(res.body).toHaveProperty('errors', expect.any(Array))
-    //         expect(res.body.errors).toEqual(expect.arrayContaining(errors))
-    //     })
-    // })
+    test('failed because required field is empty', (done) => {
+        const empty_name = { ...edit_product_data, name: ''}
+        request(app)
+            .put(`/product/${productId}`)
+            .set('token', initial_token)
+            .send(empty_name)
+            .end((err, res) => {
+                const errors = ['name is required']
+                if(err) throw err
+                expect(res.status).toBe(400)
+                expect(res.body).toHaveProperty('errors', expect.any(Array))
+                expect(res.body.errors).toEqual(expect.arrayContaining(errors))
+                done()
+            })  
+    })
+    test('failed because wrong data type', (done) => {
+        const wrong_dataType = { ...edit_product_data, stock: 'lima'}
+        request(app)
+            .put(`/product/${productId}`)
+            .set('token', initial_token)
+            .send(wrong_dataType)
+            .end((err, res) => {
+                const errors = ['only allow number format']
+                if(err) throw err
+                expect(res.status).toBe(400)
+                expect(res.body).toHaveProperty('errors', expect.any(Array))
+                expect(res.body.errors).toEqual(expect.arrayContaining(errors))
+                done()
+            })  
+    })
+    test('failed because stock is minus', (done) => {
+        const minus_stock_edit = {...edit_product_data, stock: -5}
+        request(app)
+        .put(`/product/${productId}`)
+        .set('token', initial_token)
+        .send(minus_stock_edit)
+        .end((err, res) => {
+            const errors = ['must be a non-negative number']
+            if(err) throw err
+            expect(res.status).toBe(400)
+            expect(res.body).toHaveProperty('errors', expect.any(Array))
+            expect(res.body.errors).toEqual(expect.arrayContaining(errors))
+            done()
+        })
+    })
 })
 
 describe('Product delete / Success case', () => {

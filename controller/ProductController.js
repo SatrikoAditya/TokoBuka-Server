@@ -52,13 +52,15 @@ class ProductController {
             if(!data) {
                 throw {name: 'DATA_NOT_FOUND'}
             } else {
-                data.update({
+                return data.update({
                     name, image_url, price, stock
                 }, {
                     validate: true
                 })
-                res.status(200).json({message: 'success edit data'})
             }
+        })
+        .then(result => {
+            res.status(200).json({message: 'success edit data'})
         })
         .catch(err => {
             next(err)
