@@ -39,9 +39,11 @@ class ProductController {
             if(!data) {
                 throw {name: 'DATA_NOT_FOUND'}
             } else {
-                data.destroy()
-                res.status(200).json({message: 'Product delete success'})
+                return data.destroy()
             }
+        })
+        .then(result => {
+            res.status(200).json({message: 'Product delete success'})
         })
         .catch(err => {
             next(err)
