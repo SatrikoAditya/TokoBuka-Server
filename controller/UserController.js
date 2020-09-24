@@ -38,7 +38,57 @@ class UserController {
                 next(err)
             })
         }
-        
+    }
+
+    static registerCustomer(req, res, next) {
+        const {email, password} = req.body
+        const role = 'customer'
+        User.create({
+            email, password, role
+        })
+        .then(data => {
+            res.status(201).json({
+                message: 'Success Register!',
+                id: data.id,
+                email: data.email
+            })
+        })
+        .catch(err => {
+            next(err)
+        })
+    }
+
+    static loginCustomer(req, res, next) {
+        const {email, password} = req.body
+        User.findOne({
+            where: {
+                email
+            }
+        })
+        .then(data => {
+            if(!data) {
+                throw {name: 'LOGIN_FAILED'}
+            } else {
+                let comparePassword = comparePass(password, data.password)
+                if(!comparePassword) {
+                    throw {name: 'LOGIN_FAILED'}
+                } else {
+                    let payload = {
+                        id: data.id,
+                        email: data.email
+                    }
+                    let token = generateToken(payload)
+                    res.status(200).json({
+                        id: data.id,
+                        email: data.email,
+                        token
+                    })
+                }
+            }
+        })
+        .catch(err => {
+            next(err)
+        })
     }
 }
 module.exports = UserController

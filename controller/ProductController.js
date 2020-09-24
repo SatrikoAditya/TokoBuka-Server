@@ -1,5 +1,4 @@
 const { Product } = require('../models/')
-const e = require('express')
 
 class ProductController {
     static create(req, res, next){

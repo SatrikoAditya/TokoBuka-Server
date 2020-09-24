@@ -1,5 +1,4 @@
 function errorHandler(err, req, res, next) {
-    console.log(err)
     let errors = []
     let statusCode = 500
 
@@ -23,6 +22,12 @@ function errorHandler(err, req, res, next) {
     } else if(err.name === 'DATA_NOT_FOUND') {
         statusCode = 404
         errors.push('data not found')
+    } else if(err.name === 'TOTAL_CANT_LESS_THAN_ONE') {
+        statusCode = 400
+        errors.push('Total product at least one')
+    } else if(err.name === 'CANT_ADD_MORE_THAN_STOCK') {
+        statusCode = 400
+        errors.push(`Can't add to cart more than product stock`)
     } else {
         errors.push(err.msg || 'Internal server error')
         statusCode = err.status || statusCode
